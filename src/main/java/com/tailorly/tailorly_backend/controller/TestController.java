@@ -1,5 +1,6 @@
 package com.tailorly.tailorly_backend.controller;
 
+import com.tailorly.tailorly_backend.dto.response.ApiResponse;
 import com.tailorly.tailorly_backend.model.User;
 import com.tailorly.tailorly_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,18 +17,23 @@ public class TestController {
     public String test() {
         return "Tailorly Backend Running Successfully";
     }
-
     @GetMapping("/api/test/user")
-    public String createUser() {
+    public ApiResponse<User> createUser(){
 
         User user = User.builder()
-                .name("Pranav")
+                .firstName("Pranav")
+                .lastName("Chavan")
                 .email("pranav@test.com")
                 .password("123456")
                 .build();
 
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
 
-        return "User Saved Successfully";
+        return ApiResponse.<User>builder()
+                .success(true)
+                .message("User saved successfully")
+                .data(savedUser)
+                .build();
     }
+
 }
