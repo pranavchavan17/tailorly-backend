@@ -1,5 +1,6 @@
 package com.tailorly.tailorly_backend.controller;
 
+import com.tailorly.tailorly_backend.dto.request.LoginRequest;
 import com.tailorly.tailorly_backend.dto.request.RegisterRequest;
 import com.tailorly.tailorly_backend.dto.response.ApiResponse;
 import com.tailorly.tailorly_backend.service.AuthService;
@@ -17,5 +18,9 @@ public class AuthController {
     @PostMapping("/register")
     public ApiResponse<?> register(@Valid @RequestBody RegisterRequest request) {
         return authService.register(request);
+    }
+    @PostMapping("/login")
+    public ApiResponse<?> login(@Valid @RequestBody LoginRequest request) {
+        return authService.login(request);
     }
 }

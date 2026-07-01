@@ -1,8 +1,10 @@
 package com.tailorly.tailorly_backend.service.impl;
 
+import com.tailorly.tailorly_backend.dto.request.LoginRequest;
 import com.tailorly.tailorly_backend.dto.request.RegisterRequest;
 import com.tailorly.tailorly_backend.dto.response.ApiResponse;
 import com.tailorly.tailorly_backend.dto.response.UserResponse;
+import com.tailorly.tailorly_backend.exception.InvalidCredentialsException;
 import com.tailorly.tailorly_backend.exception.ResourceAlreadyExistsException;
 import com.tailorly.tailorly_backend.model.User;
 import com.tailorly.tailorly_backend.repository.UserRepository;
@@ -47,6 +49,33 @@ public class AuthServiceImpl implements AuthService {
                 .success(true)
                 .message("User registered successfully")
                 .data(userResponse)   // <-- Return UserResponse instead of User
+                .build();
+    }
+
+    @Override
+    public ApiResponse<?> login(LoginRequest request) {
+
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() ->
+                        new InvalidCredentialsException("Invalid email or password"));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new InvalidCredentialsException("Invalid email or password");
+        }
+
+        UserResponse response = UserResponse.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .emailVerified(user.getEmailVerified())
+                .build();
+
+        return ApiResponse.builder()
+                .success(true)
+                .message("Login successful")
+                .data(response)
                 .build();
     }
 }
