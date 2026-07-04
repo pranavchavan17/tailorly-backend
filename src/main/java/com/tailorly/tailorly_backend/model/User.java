@@ -43,4 +43,8 @@ public class User {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    private String resumeUrl;
+
+    private String resumePublicId;
 }

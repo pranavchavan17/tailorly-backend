@@ -84,4 +84,17 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
+
+    @ExceptionHandler(org.springframework.web.multipart.MultipartException.class)
+    public ResponseEntity<ApiResponse<Object>> handleMultipartException(
+            org.springframework.web.multipart.MultipartException ex) {
+
+        ApiResponse<Object> response = ApiResponse.builder()
+                .success(false)
+                .message("Request must be multipart/form-data")
+                .data(null)
+                .build();
+
+        return ResponseEntity.badRequest().body(response);
+    }
 }

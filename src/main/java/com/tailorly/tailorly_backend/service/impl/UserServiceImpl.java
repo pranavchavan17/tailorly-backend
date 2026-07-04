@@ -5,14 +5,12 @@ import com.tailorly.tailorly_backend.dto.request.UpdateProfileRequest;
 import com.tailorly.tailorly_backend.dto.response.ApiResponse;
 import com.tailorly.tailorly_backend.dto.response.UserResponse;
 import com.tailorly.tailorly_backend.exception.InvalidCredentialsException;
-import com.tailorly.tailorly_backend.exception.ResourceNotFoundException;
 import com.tailorly.tailorly_backend.mapper.UserMapper;
 import com.tailorly.tailorly_backend.model.User;
 import com.tailorly.tailorly_backend.repository.UserRepository;
+import com.tailorly.tailorly_backend.service.CurrentUserService;
 import com.tailorly.tailorly_backend.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,18 +21,12 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final CurrentUserService currentUserService;
 
     @Override
     public ApiResponse<UserResponse> getCurrentUser() {
 
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
-
-        String email = authentication.getName();
-
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("User not found"));
+        User user = currentUserService.getCurrentUser();
 
         UserResponse response = userMapper.toUserResponse(user);
 
@@ -44,17 +36,11 @@ public class UserServiceImpl implements UserService {
                 .data(response)
                 .build();
     }
+
     @Override
     public ApiResponse<UserResponse> updateProfile(UpdateProfileRequest request) {
 
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
-
-        String email = authentication.getName();
-
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("User not found"));
+        User user = currentUserService.getCurrentUser();
 
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
@@ -69,21 +55,11 @@ public class UserServiceImpl implements UserService {
                 .data(response)
                 .build();
     }
-    private User getAuthenticatedUser() {
 
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
-
-        String email = authentication.getName();
-
-        return userRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("User not found"));
-    }
     @Override
     public ApiResponse<Void> changePassword(ChangePasswordRequest request) {
 
-        User user = getAuthenticatedUser();
+        User user = currentUserService.getCurrentUser();
 
         // Verify current password
         if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
