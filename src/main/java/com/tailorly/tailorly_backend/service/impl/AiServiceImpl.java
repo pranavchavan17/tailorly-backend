@@ -7,6 +7,7 @@ import com.tailorly.tailorly_backend.dto.response.GenerateResumeResponse;
 import com.tailorly.tailorly_backend.dto.response.ResumeAnalysisResponse;
 import com.tailorly.tailorly_backend.service.AiService;
 import com.tailorly.tailorly_backend.service.OpenAiService;
+import com.tailorly.tailorly_backend.service.PdfGeneratorService;
 import com.tailorly.tailorly_backend.service.ResumeParserService;
 
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class AiServiceImpl implements AiService {
 
     private final ResumeParserService resumeParserService;
     private final OpenAiService openAiService;
+    private final PdfGeneratorService pdfGeneratorService;
 
     @Override
     public ApiResponse<String> analyzeResume(MultipartFile file) {
@@ -91,5 +93,18 @@ public class AiServiceImpl implements AiService {
         } catch (Exception e) {
             throw new RuntimeException("Failed to generate resume", e);
         }
+    }
+    @Override
+    public byte[] generateResumePdf(
+            MultipartFile file,
+            String jobDescription,
+            String customPrompt) {
+
+        GenerateResumeResponse response =
+                generateResume(file, jobDescription, customPrompt).getData();
+
+        return pdfGeneratorService.generatePdf(
+                response.getGeneratedResume()
+        );
     }
 }

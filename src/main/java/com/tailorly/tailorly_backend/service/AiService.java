@@ -11,7 +11,13 @@ public interface AiService {
 
     ApiResponse<ResumeAnalysisResponse> getResumeAnalysis();
 
-    ApiResponse<GenerateResumeResponse> generateResume(MultipartFile file,
-                                                       String jobDescription,
-                                                       String customPrompt);
+    ApiResponse<GenerateResumeResponse> generateResume(
+            MultipartFile file,
+            String jobDescription,
+            String customPrompt);
+
+    byte[] generateResumePdf(
+            MultipartFile file,
+            String jobDescription,
+            String customPrompt);
 }
