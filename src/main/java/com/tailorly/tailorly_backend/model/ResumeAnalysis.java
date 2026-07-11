@@ -35,4 +35,6 @@ public class ResumeAnalysis {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+
 }
