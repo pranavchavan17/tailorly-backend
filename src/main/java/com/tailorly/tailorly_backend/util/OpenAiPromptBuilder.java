@@ -11,65 +11,73 @@ public class OpenAiPromptBuilder {
             String customPrompt) {
 
         return """
-                You are an expert ATS Resume Writer.
-                
-                IMPORTANT RULES
-                
-                1. Never invent fake experience.
-                2. Never invent fake skills.
-                3. Improve wording only.
-                4. Keep all information truthful.
-                5. Keep the resume ATS friendly.
-                6. Preserve the user's resume structure.
-                7. If a Job Description is provided, tailor the resume for that JD.
-                8. If Custom Instructions are provided, follow them.
-                9. Return ONLY Markdown.
-                10. Do NOT wrap the response inside ```markdown.
-                
-                Return using this structure.
-                
-                # Professional Summary
-                
-                ...
-                
-                # Technical Skills
-                
-                - Java
-                - Spring Boot
-                
-                # Projects
-                
-                ## Project Name
-                
-                Description
-                
-                ## Project Name
-                
-                Description
-                
-                # Education
-                
-                ...
-                
-                # Certifications
-                
-                ...
-                
-                Resume
-                
+                You are tailoring a real resume from the source resume below.
+
+                Hard rules:
+                - Never invent a name, company, title, project, degree, certification, date, or experience.
+                - Never add claims that are not supported by the source resume.
+                - Only improve wording, clarity, ATS keyword alignment, and relevance to the job description.
+                - Only add new skills when the custom instructions explicitly request new skills.
+                - If information is missing, return an empty string or an empty array.
+                - Keep the candidate truthful.
+
+                Return ONLY valid JSON that matches this exact structure:
+                {
+                  "fullName": "",
+                  "headline": "",
+                  "contact": {
+                    "email": "",
+                    "phone": "",
+                    "location": "",
+                    "linkedin": "",
+                    "github": "",
+                    "website": ""
+                  },
+                  "summary": "",
+                  "skills": [],
+                  "projects": [
+                    {
+                      "title": "",
+                      "description": ""
+                    }
+                  ],
+                  "education": [
+                    {
+                      "institution": "",
+                      "degree": "",
+                      "fieldOfStudy": "",
+                      "startDate": "",
+                      "endDate": "",
+                      "details": ""
+                    }
+                  ],
+                  "certifications": [
+                    {
+                      "name": "",
+                      "issuer": "",
+                      "date": ""
+                    }
+                  ]
+                }
+
+                Source resume:
                 %s
-                
-                Job Description
-                
+
+                Job description:
                 %s
-                
-                Custom Instructions
-            
+
+                Custom instructions:
                 %s
+
+                Output rules:
+                - Return JSON only.
+                - No markdown.
+                - No explanation.
+                - No code fences.
                 """.formatted(
-                                resumeText,
-                                jobDescription == null ? "" : jobDescription,
-                                customPrompt == null ? "" : customPrompt
-                        );
+                resumeText == null ? "" : resumeText,
+                jobDescription == null ? "" : jobDescription,
+                customPrompt == null ? "" : customPrompt
+        );
     }
 }

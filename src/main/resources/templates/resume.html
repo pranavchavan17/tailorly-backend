@@ -1,26 +1,194 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8"/>
 
-    <meta charset="UTF-8">
-
-    <link rel="stylesheet" th:href="@{/css/resume.css}">
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"/>
 
     <title>Tailorly Resume</title>
 
+    <!--<style th:if="${resumeCss != null}"
+           th:utext="${resumeCss}">
+    </style>
+    -->
+    <link rel="stylesheet" href="resume.css"/>
+    <!--<style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+    </style>-->
 </head>
 
 <body>
 
+<main class="resume-page">
 
+    <!-- Header -->
 
-<div class="resume-content">
+    <header class="resume-header">
 
-    <pre th:text="${resume}"></pre>
+        <h1 class="resume-name"
+            th:text="${resume.fullName}">
+            Full Name
+        </h1>
 
-</div>
+        <p class="resume-headline"
+           th:text="${resume.headline}">
+            Headline
+        </p>
 
-</div>
+        <p class="resume-contact"
+           th:if="${contactLine != null and !#strings.isEmpty(contactLine)}"
+           th:text="${contactLine}">
+            Contact
+        </p>
+
+    </header>
+
+    <!-- Summary -->
+
+    <section class="resume-section"
+             th:if="${!#strings.isEmpty(resume.summary)}">
+
+        <h2>Professional Summary</h2>
+
+        <p th:text="${resume.summary}">
+            Summary
+        </p>
+
+    </section>
+
+    <!-- Skills -->
+
+    <section class="resume-section"
+             th:if="${resume.skills != null and !#lists.isEmpty(resume.skills)}">
+
+        <h2>Technical Skills</h2>
+
+        <ul class="resume-list compact-list">
+
+            <li th:each="skill : ${resume.skills}"
+                th:text="${skill}">
+                Skill
+            </li>
+
+        </ul>
+
+    </section>
+
+    <!-- Projects -->
+
+    <section class="resume-section"
+             th:if="${resume.projects != null and !#lists.isEmpty(resume.projects)}">
+
+        <h2>Projects</h2>
+
+        <article class="entry"
+                 th:each="project : ${resume.projects}">
+
+            <h3 th:if="${!#strings.isEmpty(project.title)}"
+                th:text="${project.title}">
+                Project
+            </h3>
+
+            <p th:if="${!#strings.isEmpty(project.description)}"
+               th:text="${project.description}">
+                Description
+            </p>
+
+        </article>
+
+    </section>
+
+    <!-- Education -->
+
+    <section class="resume-section"
+             th:if="${resume.education != null and !#lists.isEmpty(resume.education)}">
+
+        <h2>Education</h2>
+
+        <article class="entry"
+                 th:each="education : ${resume.education}">
+
+            <h3 th:if="${!#strings.isEmpty(education.institution)}"
+                th:text="${education.institution}">
+                Institution
+            </h3>
+
+            <p class="entry-meta">
+
+                <span th:if="${!#strings.isEmpty(education.degree)}"
+                      th:text="${education.degree}">
+                </span>
+
+                <span th:if="${!#strings.isEmpty(education.fieldOfStudy)}">
+                    |
+                    <span th:text="${education.fieldOfStudy}"></span>
+                </span>
+
+            </p>
+
+            <p class="entry-meta">
+
+                <span th:if="${!#strings.isEmpty(education.startDate)}"
+                      th:text="${education.startDate}">
+                </span>
+
+                <span th:if="${!#strings.isEmpty(education.startDate) and !#strings.isEmpty(education.endDate)}">
+                    -
+                </span>
+
+                <span th:if="${!#strings.isEmpty(education.endDate)}"
+                      th:text="${education.endDate}">
+                </span>
+
+            </p>
+
+            <p th:if="${!#strings.isEmpty(education.details)}"
+               th:text="${education.details}">
+            </p>
+
+        </article>
+
+    </section>
+
+    <!-- Certifications -->
+
+    <section class="resume-section"
+             th:if="${resume.certifications != null and !#lists.isEmpty(resume.certifications)}">
+
+        <h2>Certifications</h2>
+
+        <article class="entry"
+                 th:each="certification : ${resume.certifications}">
+
+            <h3 th:if="${!#strings.isEmpty(certification.name)}"
+                th:text="${certification.name}">
+            </h3>
+
+            <p class="entry-meta">
+
+                <span th:if="${!#strings.isEmpty(certification.issuer)}"
+                      th:text="${certification.issuer}">
+                </span>
+
+                <span th:if="${!#strings.isEmpty(certification.issuer) and !#strings.isEmpty(certification.date)}">
+                    |
+                </span>
+
+                <span th:if="${!#strings.isEmpty(certification.date)}"
+                      th:text="${certification.date}">
+                </span>
+
+            </p>
+
+        </article>
+
+    </section>
+
+</main>
 
 </body>
 </html>

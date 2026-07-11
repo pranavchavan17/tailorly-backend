@@ -60,4 +60,24 @@ public class AiController {
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(pdf);
     }
+
+    @PostMapping("/generate-resume/docx")
+    public ResponseEntity<byte[]> generateResumeDocx(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "jobDescription", required = false) String jobDescription,
+            @RequestParam(value = "customPrompt", required = false) String customPrompt) {
+
+        byte[] docx = aiService.generateResumeDocx(
+                file,
+                jobDescription,
+                customPrompt
+        );
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=tailorly_resume.docx")
+                .contentType(MediaType.parseMediaType(
+                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"))
+                .body(docx);
+    }
 }

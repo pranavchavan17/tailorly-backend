@@ -20,4 +20,9 @@ public interface AiService {
             MultipartFile file,
             String jobDescription,
             String customPrompt);
+
+    byte[] generateResumeDocx(
+            MultipartFile file,
+            String jobDescription,
+            String customPrompt);
 }

@@ -1,24 +1,19 @@
 package com.tailorly.tailorly_backend.service.impl;
 
+import com.tailorly.tailorly_backend.dto.resume.ResumeData;
+import com.tailorly.tailorly_backend.renderer.ResumeHtmlRenderer;
 import com.tailorly.tailorly_backend.service.HtmlResumeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
 
 @Service
 @RequiredArgsConstructor
 public class HtmlResumeServiceImpl implements HtmlResumeService {
 
-    private final TemplateEngine templateEngine;
+    private final ResumeHtmlRenderer resumeHtmlRenderer;
 
     @Override
-    public String generateHtml(String resumeContent) {
-
-        Context context = new Context();
-
-        context.setVariable("resume", resumeContent);
-
-        return templateEngine.process("resume", context);
+    public String generateHtml(ResumeData resume) {
+        return resumeHtmlRenderer.render(resume);
     }
 }

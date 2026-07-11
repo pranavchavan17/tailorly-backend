@@ -1,101 +1,38 @@
 package com.tailorly.tailorly_backend.service.impl;
 
-import com.lowagie.text.*;
-import com.lowagie.text.pdf.PdfWriter;
+import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
+import com.tailorly.tailorly_backend.dto.resume.ResumeData;
+import com.tailorly.tailorly_backend.exception.PdfGenerationException;
+import com.tailorly.tailorly_backend.renderer.ResumeHtmlRenderer;
 import com.tailorly.tailorly_backend.service.PdfGeneratorService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 
 @Service
+@RequiredArgsConstructor
 public class PdfGeneratorServiceImpl implements PdfGeneratorService {
 
+    private final ResumeHtmlRenderer resumeHtmlRenderer;
+
     @Override
-    public byte[] generatePdf(String generatedResume) {
+    public byte[] generatePdf(ResumeData resume) {
 
-        try {
+        String html = resumeHtmlRenderer.render(resume);
 
-            Document document = new Document(PageSize.A4, 40, 40, 40, 40);
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
 
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-            PdfWriter.getInstance(document, outputStream);
-
-            document.open();
-
-            Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
-
-            Font headingFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14);
-
-            Font bodyFont = FontFactory.getFont(FontFactory.HELVETICA, 11);
-
-            document.add(new Paragraph("Tailorly AI Resume", titleFont));
-            document.add(Chunk.NEWLINE);
-
-            String[] lines = generatedResume.split("\\r?\\n");
-
-            for (String line : lines) {
-
-                line = line.trim();
-
-                if (line.isBlank()) {
-                    document.add(Chunk.NEWLINE);
-                    continue;
-                }
-
-                if (isHeading(line)) {
-
-                    Paragraph heading = new Paragraph(line, headingFont);
-                    heading.setSpacingBefore(10);
-                    heading.setSpacingAfter(5);
-
-                    document.add(heading);
-                }
-
-                else if (line.startsWith("- ")) {
-
-                    Paragraph bullet =
-                            new Paragraph("• " + line.substring(2), bodyFont);
-
-                    bullet.setIndentationLeft(20);
-
-                    document.add(bullet);
-                }
-
-                else {
-
-                    Paragraph body =
-                            new Paragraph(line, bodyFont);
-
-                    body.setSpacingAfter(3);
-
-                    document.add(body);
-                }
-            }
-
-            document.close();
+            PdfRendererBuilder builder = new PdfRendererBuilder();
+            builder.useFastMode();
+            builder.withHtmlContent(html, "");
+            builder.toStream(outputStream);
+            builder.run();
 
             return outputStream.toByteArray();
 
+        } catch (Exception e) {
+            throw new PdfGenerationException("Failed to generate PDF", e);
         }
-
-        catch (Exception e) {
-
-            throw new RuntimeException("Failed to generate PDF", e);
-        }
-    }
-
-    private boolean isHeading(String line) {
-
-        String value = line.toLowerCase();
-
-        return value.contains("summary")
-                || value.contains("skill")
-                || value.contains("project")
-                || value.contains("education")
-                || value.contains("experience")
-                || value.contains("certification")
-                || value.contains("achievement")
-                || value.contains("profile");
     }
 }

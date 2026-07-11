@@ -1,5 +1,5 @@
 package com.tailorly.tailorly_backend.dto.response;
-
+import com.tailorly.tailorly_backend.dto.resume.ResumeData;
 import lombok.Builder;
 import lombok.Data;
 
@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 public class GenerateResumeResponse {
 
-    private String generatedResume;
+    private ResumeData resume;
 
     private String format;
 }
