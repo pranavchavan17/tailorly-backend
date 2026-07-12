@@ -19,4 +19,18 @@ class OpenAiPromptBuilderTest {
         assertThat(prompt).contains("\"skills\": []");
         assertThat(prompt).doesNotContain("\"resume\": {");
     }
+
+    @Test
+    void buildAtsScorePrompt_shouldRequestStructuredAtsPayload() {
+        String prompt = OpenAiPromptBuilder.buildAtsScorePrompt(
+                "source resume text",
+                "job description"
+        );
+
+        assertThat(prompt).contains("\"overallScore\": 0");
+        assertThat(prompt).contains("\"atsScore\": 0");
+        assertThat(prompt).contains("\"missingKeywords\": []");
+        assertThat(prompt).contains("\"recommendations\": []");
+        assertThat(prompt).contains("Return JSON only.");
+    }
 }

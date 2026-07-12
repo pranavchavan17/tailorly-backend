@@ -80,4 +80,64 @@ public class OpenAiPromptBuilder {
                 customPrompt == null ? "" : customPrompt
         );
     }
+
+    public static String buildAtsScorePrompt(
+            String resumeText,
+            String jobDescription) {
+
+        return """
+                You are an ATS resume scoring engine.
+
+                Hard rules:
+                - Evaluate only the uploaded resume text.
+                - If a job description is provided, score the resume against that role and its ATS expectations.
+                - If no job description is provided, score against general ATS best practices for the likely role suggested by the resume.
+                - Do not invent experience, skills, education, certifications, or keywords.
+                - Use only the source resume and the optional job description.
+                - Return integer scores from 0 to 100.
+                - Return concise missing keywords and concise recommendations only.
+
+                Score these dimensions:
+                - Overall Score
+                - Keyword Match
+                - Formatting
+                - Professional Summary
+                - Skills
+                - Projects
+                - Experience
+                - Education
+                - Grammar
+                - ATS Friendliness
+
+                Return ONLY valid JSON that matches this exact structure:
+                {
+                  "overallScore": 0,
+                  "keywordScore": 0,
+                  "formatScore": 0,
+                  "summaryScore": 0,
+                  "skillsScore": 0,
+                  "experienceScore": 0,
+                  "educationScore": 0,
+                  "grammarScore": 0,
+                  "atsScore": 0,
+                  "missingKeywords": [],
+                  "recommendations": []
+                }
+
+                Resume text:
+                %s
+
+                Job description:
+                %s
+
+                Output rules:
+                - Return JSON only.
+                - No markdown.
+                - No explanation.
+                - No code fences.
+                """.formatted(
+                resumeText == null ? "" : resumeText,
+                jobDescription == null ? "" : jobDescription
+        );
+    }
 }

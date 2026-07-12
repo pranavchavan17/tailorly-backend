@@ -41,10 +41,11 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/v1/auth/**",
-                                "/api/test",
-                                "/actuator/**"
-                        ).permitAll()
+                        "/api/v1/auth/**",
+                        "/api/v1/ats/**",
+                        "/api/test",
+                        "/actuator/**"
+                ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())

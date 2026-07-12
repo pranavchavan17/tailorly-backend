@@ -4,8 +4,10 @@ import com.tailorly.tailorly_backend.dto.response.ApiResponse;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -85,6 +87,20 @@ public class GlobalExceptionHandler {
             org.springframework.web.multipart.MultipartException ex) {
 
         return buildErrorResponse(HttpStatus.BAD_REQUEST, "Request must be multipart/form-data");
+    }
+
+    @ExceptionHandler({BindException.class, MethodArgumentNotValidException.class})
+    public ResponseEntity<ApiResponse<Object>> handleValidationException(Exception ex) {
+        String message = "Invalid request";
+
+        if (ex instanceof BindException bindException && bindException.getBindingResult().hasFieldErrors()) {
+            message = bindException.getBindingResult().getFieldErrors().getFirst().getDefaultMessage();
+        } else if (ex instanceof MethodArgumentNotValidException validationException
+                && validationException.getBindingResult().hasFieldErrors()) {
+            message = validationException.getBindingResult().getFieldErrors().getFirst().getDefaultMessage();
+        }
+
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, message);
     }
 
     private ResponseEntity<ApiResponse<Object>> buildErrorResponse(HttpStatus status, String message) {
