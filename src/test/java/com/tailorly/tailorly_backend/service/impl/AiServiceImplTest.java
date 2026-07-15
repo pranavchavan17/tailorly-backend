@@ -11,6 +11,7 @@ import com.tailorly.tailorly_backend.service.DocxGeneratorService;
 import com.tailorly.tailorly_backend.service.OpenAiService;
 import com.tailorly.tailorly_backend.service.PdfGeneratorService;
 import com.tailorly.tailorly_backend.service.ResumeParserService;
+import com.tailorly.tailorly_backend.service.SubscriptionService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -42,6 +43,9 @@ class AiServiceImplTest {
     @Mock
     private DocxGeneratorService docxGeneratorService;
 
+    @Mock
+    private SubscriptionService subscriptionService;
+
     @InjectMocks
     private AiServiceImpl aiService;
 
@@ -63,6 +67,9 @@ class AiServiceImplTest {
                         .format("JSON")
                         .build());
         when(pdfGeneratorService.generatePdf(any())).thenReturn(new byte[]{1, 2, 3});
+
+        org.mockito.Mockito.doNothing().when(subscriptionService).enforceResumeTailoringAccess();
+        org.mockito.Mockito.doNothing().when(subscriptionService).recordSuccessfulResumeTailoring();
 
         byte[] result = aiService.generateResumePdf(file, "job description", "custom prompt");
 
@@ -89,6 +96,9 @@ class AiServiceImplTest {
                         .resume(resume)
                         .format("JSON")
                         .build());
+
+        org.mockito.Mockito.doNothing().when(subscriptionService).enforceResumeTailoringAccess();
+        org.mockito.Mockito.doNothing().when(subscriptionService).recordSuccessfulResumeTailoring();
 
         ApiResponse<GenerateResumeResponse> response =
                 aiService.generateResume(file, "job description", "custom prompt");

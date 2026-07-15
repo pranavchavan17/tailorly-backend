@@ -75,6 +75,20 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
+    @ExceptionHandler(SubscriptionAccessException.class)
+    public ResponseEntity<ApiResponse<Object>> handleSubscriptionAccessException(
+            SubscriptionAccessException ex) {
+
+        return buildErrorResponse(HttpStatus.FORBIDDEN, ex.getMessage());
+    }
+
+    @ExceptionHandler(PaymentProcessingException.class)
+    public ResponseEntity<ApiResponse<Object>> handlePaymentProcessingException(
+            PaymentProcessingException ex) {
+
+        return buildErrorResponse(HttpStatus.BAD_GATEWAY, ex.getMessage());
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiResponse<Object>> handleResourceNotFound(
             ResourceNotFoundException ex) {

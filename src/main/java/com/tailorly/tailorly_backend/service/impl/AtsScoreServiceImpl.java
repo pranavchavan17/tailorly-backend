@@ -11,6 +11,7 @@ import com.tailorly.tailorly_backend.exception.OpenAiException;
 import com.tailorly.tailorly_backend.model.AtsScoreResult;
 import com.tailorly.tailorly_backend.service.AtsScoreService;
 import com.tailorly.tailorly_backend.service.ResumeParserService;
+import com.tailorly.tailorly_backend.service.SubscriptionService;
 import com.tailorly.tailorly_backend.util.MultipartFileTempFileExecutor;
 import com.tailorly.tailorly_backend.util.OpenAiPromptBuilder;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +26,15 @@ public class AtsScoreServiceImpl implements AtsScoreService {
 
     private final ResumeParserService resumeParserService;
     private final OpenAIClient openAIClient;
+    private final SubscriptionService subscriptionService;
 
     @Override
     public ApiResponse<AtsScoreResponse> scoreResume(AtsScoreRequest request) {
         if (request == null) {
             throw new IllegalArgumentException("ATS score request is required");
         }
+
+        subscriptionService.enforceAtsAccess();
 
         return MultipartFileTempFileExecutor.withTemporaryFile(
                 request.getResumeFile(),

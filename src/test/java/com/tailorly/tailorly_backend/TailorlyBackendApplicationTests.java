@@ -10,7 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 		"cloudinary.cloud-name=test",
 		"cloudinary.api-key=test",
 		"cloudinary.api-secret=test",
-		"openai.api-key=test"
+		"openai.api-key=test",
+		"razorpay.key-id=test",
+		"razorpay.key-secret=test"
 })
 class TailorlyBackendApplicationTests {
 

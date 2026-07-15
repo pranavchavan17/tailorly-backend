@@ -9,6 +9,7 @@ import com.tailorly.tailorly_backend.service.DocxGeneratorService;
 import com.tailorly.tailorly_backend.service.OpenAiService;
 import com.tailorly.tailorly_backend.service.PdfGeneratorService;
 import com.tailorly.tailorly_backend.service.ResumeParserService;
+import com.tailorly.tailorly_backend.service.SubscriptionService;
 import com.tailorly.tailorly_backend.util.MultipartFileTempFileExecutor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class AiServiceImpl implements AiService {
     private final OpenAiService openAiService;
     private final PdfGeneratorService pdfGeneratorService;
     private final DocxGeneratorService docxGeneratorService;
+    private final SubscriptionService subscriptionService;
 
     @Override
     public ApiResponse<String> analyzeResume(MultipartFile file) {
@@ -49,8 +51,11 @@ public class AiServiceImpl implements AiService {
             String jobDescription,
             String customPrompt) {
 
+        subscriptionService.enforceResumeTailoringAccess();
+
         return MultipartFileTempFileExecutor.withTemporaryFile(file, "tailorly-resume-", tempFile -> {
             GenerateResumeResponse response = buildTailoredResume(tempFile, jobDescription, customPrompt);
+            subscriptionService.recordSuccessfulResumeTailoring();
 
             return ApiResponse.<GenerateResumeResponse>builder()
                     .success(true)
@@ -66,9 +71,13 @@ public class AiServiceImpl implements AiService {
             String jobDescription,
             String customPrompt) {
 
+        subscriptionService.enforceResumeTailoringAccess();
+
         return MultipartFileTempFileExecutor.withTemporaryFile(file, "tailorly-resume-", tempFile -> {
             GenerateResumeResponse response = buildTailoredResume(tempFile, jobDescription, customPrompt);
-            return pdfGeneratorService.generatePdf(response.getResume());
+            byte[] pdf = pdfGeneratorService.generatePdf(response.getResume());
+            subscriptionService.recordSuccessfulResumeTailoring();
+            return pdf;
         });
     }
 
@@ -78,9 +87,13 @@ public class AiServiceImpl implements AiService {
             String jobDescription,
             String customPrompt) {
 
+        subscriptionService.enforceResumeTailoringAccess();
+
         return MultipartFileTempFileExecutor.withTemporaryFile(file, "tailorly-resume-", tempFile -> {
             GenerateResumeResponse response = buildTailoredResume(tempFile, jobDescription, customPrompt);
-            return docxGeneratorService.generateDocx(tempFile, response.getResume());
+            byte[] docx = docxGeneratorService.generateDocx(tempFile, response.getResume());
+            subscriptionService.recordSuccessfulResumeTailoring();
+            return docx;
         });
     }
 
