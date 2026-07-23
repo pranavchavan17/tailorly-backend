@@ -1,187 +1,362 @@
-# Tailorly – AI-Powered Resume Tailoring Platform
+# 🚀 Tailorly Backend
 
-Tailorly is an AI-powered resume tailoring platform that helps job seekers create customized resumes for specific job descriptions. The application analyzes a user's resume and a target job description, then generates an optimized resume that is more relevant to the role while maintaining factual accuracy.
+> AI-Powered Resume Tailoring Platform built with Spring Boot, OpenAI, MongoDB, JWT Authentication, ATS Scoring, PDF/DOCX Generation, and Razorpay Subscription Integration.
 
-The backend is built with **Spring Boot** and follows a clean, scalable architecture with secure authentication, cloud storage integration, and AI-powered resume processing.
-
----
-
-## Features
-
-* User Registration & Login
-* JWT-based Authentication & Authorization
-* Secure Password Encryption using BCrypt
-* User Profile Management
-* Resume Upload & Storage
-* AI-Powered Resume Tailoring
-* Resume Version Management
-* Subscription & Usage Tracking
-* RESTful APIs
-* MongoDB Atlas Integration
-* Production-ready layered architecture
+![Java](https://img.shields.io/badge/Java-21-orange)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5-brightgreen)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green)
+![JWT](https://img.shields.io/badge/JWT-Authentication-blue)
+![OpenAI](https://img.shields.io/badge/OpenAI-GPT-black)
+![Razorpay](https://img.shields.io/badge/Razorpay-Payment-blue)
+![Maven](https://img.shields.io/badge/Maven-Build-red)
 
 ---
 
-## Tech Stack
+# 📌 Project Status
 
-### Backend
+✅ Backend Completed
 
-* Java 21
-* Spring Boot 3.x
-* Spring Security
-* Spring Data MongoDB
-* JWT Authentication
-* Maven
+Implemented Features:
 
-### Database
-
-* MongoDB Atlas
-
-### Cloud Services
-
-* Cloudinary (Resume Storage)
-
-### AI
-
-* OpenAI API
+- JWT Authentication
+- User Profile Management
+- AI Resume Tailoring
+- ATS Score Analysis
+- Resume PDF Generation
+- Resume DOCX Generation
+- Razorpay Subscription Integration
+- Free & Premium Usage Management
+- Swagger / OpenAPI Documentation
 
 ---
 
-## Project Structure
+# 📖 Overview
 
-```text
+Tailorly Backend powers an AI-powered resume tailoring platform that helps job seekers optimize their resumes for specific job descriptions.
+
+The backend securely manages authentication, AI resume generation, ATS analysis, payment processing, subscription management, and document generation through REST APIs consumed by the React frontend.
+
+---
+
+# ✨ Features
+
+## 🔐 Authentication
+
+- User Registration
+- Secure Login
+- JWT Authentication
+- BCrypt Password Encryption
+- Stateless Security
+- Protected APIs
+
+---
+
+## 👤 User Profile
+
+- View Profile
+- Update Profile
+- Change Password
+
+---
+
+## 🤖 AI Resume Tailoring
+
+- Upload Resume (PDF/DOCX)
+- Resume Text Extraction
+- AI-powered Resume Tailoring
+- Job Description Optimization
+- Custom Prompt Support
+- Structured Resume Response
+
+---
+
+## 📄 Resume Export
+
+- PDF Resume Generation
+- DOCX Resume Generation
+- Resume Preview Support
+
+---
+
+## 📊 ATS Score Analysis
+
+- Overall ATS Score
+- Keyword Score
+- Skills Score
+- Experience Score
+- Education Score
+- Grammar Score
+- Summary Score
+- Formatting Score
+- Missing Keywords Detection
+- Improvement Recommendations
+
+---
+
+## 💳 Subscription & Payments
+
+- Razorpay Monthly Subscription
+- Free Tier (3 Resume Generations)
+- Premium Unlimited Resume Tailoring
+- Premium ATS Access
+- Usage Tracking
+- Secure Payment Verification
+
+---
+
+## 📚 API Documentation
+
+- Swagger UI
+- OpenAPI JSON
+
+---
+
+# 🏗 System Architecture
+
+```
+                 React Frontend
+                       │
+                 REST API (JWT)
+                       │
+                       ▼
+            Spring Boot Backend
+                       │
+      ┌────────────────┼────────────────┐
+      │                │                │
+      ▼                ▼                ▼
+  OpenAI API      Razorpay API     MongoDB Atlas
+      │
+      ▼
+AI Resume Tailoring
+ATS Score Generation
+```
+
+---
+
+# 🛠 Tech Stack
+
+## Backend
+
+- Java 21
+- Spring Boot 3.5
+- Spring Security
+- Spring Validation
+- Spring Data MongoDB
+- MongoDB Atlas
+- JWT Authentication
+- Maven
+
+## AI
+
+- OpenAI Java SDK
+
+## Payment
+
+- Razorpay
+
+## Document Generation
+
+- Apache PDFBox
+- Apache POI
+- OpenHTMLToPDF
+- Thymeleaf
+
+---
+
+# 📂 Project Structure
+
+```
 src
-├── controller
-├── service
-│   ├── impl
-├── repository
-├── entity
-├── dto
-├── security
 ├── config
+├── controller
+├── dto
 ├── exception
-└── util
+├── model
+├── repository
+├── renderer
+├── security
+├── service
+├── util
+└── resources
 ```
 
 ---
 
-## Authentication Flow
+# 🔄 Application Flow
 
-1. User registers with email and password.
-2. Password is encrypted using BCrypt.
-3. User logs in.
-4. Backend validates credentials.
-5. JWT token is generated.
-6. Protected APIs require a valid JWT in the Authorization header.
+## AI Resume Tailoring
 
----
-
-## Main API Endpoints
-
-### Authentication
-
-| Method | Endpoint                |
-| ------ | ----------------------- |
-| POST   | `/api/v1/auth/register` |
-| POST   | `/api/v1/auth/login`    |
-
-### User
-
-| Method | Endpoint                        |
-| ------ | ------------------------------- |
-| GET    | `/api/v1/users/me`              |
-| PUT    | `/api/v1/users/profile`         |
-| PUT    | `/api/v1/users/change-password` |
-
-### Resume
-
-| Method | Endpoint                 |
-| ------ | ------------------------ |
-| POST   | `/api/v1/resumes/upload` |
-| GET    | `/api/v1/resumes`        |
-
-### Payment & Subscription
-
-| Method | Endpoint                       |
-| ------ | ------------------------------ |
-| POST   | `/api/v1/payment/create-order` |
-| POST   | `/api/v1/payment/verify`       |
-| GET    | `/api/v1/subscription`         |
-
----
-
-## Security
-
-* JWT Authentication
-* BCrypt Password Hashing
-* Stateless Sessions
-* Role-based Authorization
-* Protected REST APIs
-
----
-
-## Getting Started
-
-### Prerequisites
-
-* Java 21
-* Maven
-* MongoDB Atlas
-* Git
-
-### Clone the Repository
-
-```bash
-git clone https://github.com/pranavchavan17/tailorly-backend.git
-cd tailorly-backend
+```
+Upload Resume
+      │
+      ▼
+Resume Parsing
+      │
+      ▼
+OpenAI Resume Tailoring
+      │
+      ▼
+Structured Resume
+      │
+ ┌────┴─────┐
+ ▼          ▼
+PDF       DOCX
 ```
 
-### Configure Environment Variables
+---
 
-Create an `.env` file or configure `application.properties` with:
+## ATS Score Analysis
+
+```
+Upload Resume
+      │
+      ▼
+Resume Parsing
+      │
+      ▼
+OpenAI ATS Analysis
+      │
+      ▼
+ATS Report
+      │
+      ├── Overall Score
+      ├── Missing Keywords
+      ├── Recommendations
+      └── Section-wise Scores
+```
+
+---
+
+## Subscription Workflow
+
+```
+New User
+     │
+     ▼
+3 Free Resume Generations
+     │
+     ▼
+Free Limit Reached
+     │
+     ▼
+Purchase Subscription
+     │
+     ▼
+Razorpay Payment Verification
+     │
+     ▼
+Premium Activated
+     │
+     ├── Unlimited Resume Tailoring
+     └── Unlimited ATS Analysis
+```
+
+---
+
+# 🔐 Environment Variables
+
+Configure the following environment variables before running the application.
 
 ```properties
 MONGODB_URI=
+
 JWT_SECRET=
+JWT_EXPIRATION=
+
 OPENAI_API_KEY=
+
+RAZORPAY_KEY_ID=
+RAZORPAY_KEY_SECRET=
+
 CLOUDINARY_CLOUD_NAME=
 CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=
 ```
 
-### Run the Application
+---
+
+# ▶ Running Locally
+
+## Clone Repository
+
+```bash
+git clone https://github.com/pranavchavan17/tailorly-backend.git
+```
+
+## Navigate
+
+```bash
+cd tailorly-backend
+```
+
+## Install Dependencies
+
+```bash
+./mvnw clean install
+```
+
+or
 
 ```bash
 mvn clean install
+```
+
+## Run
+
+```bash
+./mvnw spring-boot:run
+```
+
+or
+
+```bash
 mvn spring-boot:run
 ```
 
-The application will start at:
+---
 
-```text
-http://localhost:8080
+# 📖 API Documentation
+
+### Swagger UI
+
+```
+http://localhost:8080/swagger-ui/index.html
+```
+
+### OpenAPI JSON
+
+```
+http://localhost:8080/v3/api-docs
 ```
 
 ---
 
-## Future Enhancements
+# 🔗 Related Repository
 
-* ATS Score Analysis
-* Payment Integration Improvements
-* Resume Analytics Dashboard
-* AI Resume Suggestions
-* Multi-language Resume Support
+Frontend Repository
+
+https://github.com/pranavchavan17/tailorly-frontend
 
 ---
 
-## Author
+# 🚀 Planned Enhancements
+
+- Multiple Resume Templates
+- Resume Version History
+- AI Interview Preparation
+
+---
+
+# 👨‍💻 Author
 
 **Pranav Chavan**
 
-Java Backend Developer | Spring Boot | MongoDB | REST APIs | JWT Authentication | AI Integration
+GitHub
+
+https://github.com/pranavchavan17
 
 ---
 
-## License
+## ⭐ Support
 
-This project is intended for educational and portfolio purposes.
+If you found this project helpful, consider giving the repository a ⭐ on GitHub.
