@@ -62,10 +62,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<Object>> handleGenericException(
-            Exception ex) {
+    public ResponseEntity<ApiResponse<Object>> handleGenericException(Exception ex) {
 
-        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong");
+        ex.printStackTrace();
+
+        return buildErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                ex.getClass().getSimpleName() + ": " + ex.getMessage()
+        );
     }
 
     @ExceptionHandler(InvalidCredentialsException.class)
